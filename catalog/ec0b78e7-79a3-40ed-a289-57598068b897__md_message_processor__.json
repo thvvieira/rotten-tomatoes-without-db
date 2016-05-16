@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "movies"
+        }
+    },
+    "outputMessageMetadata": {},
+    "id": "ec0b78e7-79a3-40ed-a289-57598068b897",
+    "version": "5.2.0.0"
+}

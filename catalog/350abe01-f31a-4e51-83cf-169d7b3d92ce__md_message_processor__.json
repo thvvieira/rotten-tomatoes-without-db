@@ -1,0 +1,16 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "movies"
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "movies-map"
+        }
+    },
+    "id": "350abe01-f31a-4e51-83cf-169d7b3d92ce",
+    "version": "5.2.0.0"
+}

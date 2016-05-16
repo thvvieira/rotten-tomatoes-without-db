@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+    <http:request-config name="HTTP_request_Configuration" host="api.rottentomatoes.com" port="80" doc:name="HTTP Request Configuration" basePath="api/public/v1.0"/>
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" user="root" database="rotten-tomatoes" doc:name="MySQL Configuration"/>
+    <flow name="rotten-tomatoesFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP" parseRequest="false"/>
+        <http:request config-ref="HTTP_request_Configuration" path="/movies.json" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:query-param paramName="apikey" value="${service.key}"/>
+                <http:query-param paramName="q" value="*"/>
+                <http:query-param paramName="page_limit" value="10"/>
+            </http:request-builder>
+        </http:request>
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <json:json-to-object-transformer returnClass="java.util.Map" doc:name="JSON to Object"/>
+        <foreach collection="#[payload.movies]" doc:name="For Each">
+            <logger message="#[payload.title] #[payload.year] " level="INFO" doc:name="Logger"/>
+            <foreach collection="#[payload.abridged_cast]" doc:name="For Each">
+                <logger message="#[payload.name]" level="INFO" doc:name="Logger"/>
+            </foreach>
+        </foreach>
+    </flow>
+</mule>
